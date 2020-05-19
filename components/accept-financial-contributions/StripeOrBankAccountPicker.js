@@ -258,8 +258,8 @@ class StripeOrBankAccountPicker extends React.Component {
 }
 
 // We query on "account" and not "host" because the account is not necessarily an host yet
-const hostQuery = gqlV2`
-  query host($slug: String!) {
+const hostQuery = gqlV2/* GraphQL */ `
+  query AcceptFinancialContributionsHost($slug: String!) {
     host: account(slug: $slug) {
       id
       slug
@@ -268,10 +268,11 @@ const hostQuery = gqlV2`
         service
       }
       settings
+    }
   }
-}`;
+`;
 
-const addHost = graphql(hostQuery, {
+const addHostData = graphql(hostQuery, {
   options: props => ({
     context: API_V2_CONTEXT,
     variables: {
@@ -280,4 +281,4 @@ const addHost = graphql(hostQuery, {
   }),
 });
 
-export default injectIntl(addHost(withRouter(StripeOrBankAccountPicker)));
+export default injectIntl(withRouter(addHostData(StripeOrBankAccountPicker)));

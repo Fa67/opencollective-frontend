@@ -89,11 +89,11 @@ const MenuSection = styled(Flex).attrs({
   width: 1,
   px: 1,
   py: 1,
-})``;
+});
 
 // GraphQL
 const cancelRecurringContributionMutation = gqlV2/* GraphQL */ `
-  mutation cancelRecurringContribution($order: OrderReferenceInput!) {
+  mutation CancelRecurringContribution($order: OrderReferenceInput!) {
     cancelOrder(order: $order) {
       id
     }
@@ -101,15 +101,15 @@ const cancelRecurringContributionMutation = gqlV2/* GraphQL */ `
 `;
 
 const activateRecurringContributionMutation = gqlV2/* GraphQL */ `
-  mutation activateRecurringContribution($order: OrderReferenceInput!) {
+  mutation ActivateRecurringContribution($order: OrderReferenceInput!) {
     activateOrder(order: $order) {
       id
     }
   }
 `;
 
-const subsRevampPageQuery = gqlV2/* GraphQL */ `
-  query RecurringContributions($collectiveSlug: String) {
+const recurringContributionsPopUpQuery = gqlV2/* GraphQL */ `
+  query RecurringContributionsPopUp($collectiveSlug: String) {
     account(slug: $collectiveSlug) {
       id
       slug
@@ -284,7 +284,7 @@ const RecurringContributionsPopUp = ({ contribution, status, createNotification,
                     variables: { order: { id: contribution.id } },
                     refetchQueries: [
                       {
-                        query: subsRevampPageQuery,
+                        query: recurringContributionsPopUpQuery,
                         variables: { collectiveSlug: props.router.query.collectiveSlug },
                         context: API_V2_CONTEXT,
                       },
@@ -343,7 +343,7 @@ const RecurringContributionsPopUp = ({ contribution, status, createNotification,
                     variables: { order: { id: contribution.id } },
                     refetchQueries: [
                       {
-                        query: subsRevampPageQuery,
+                        query: recurringContributionsPopUpQuery,
                         variables: { collectiveSlug: props.router.query.collectiveSlug },
                         context: API_V2_CONTEXT,
                       },

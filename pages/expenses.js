@@ -213,8 +213,8 @@ class ExpensePage extends React.Component {
   }
 }
 
-const EXPENSES_PAGE_QUERY = gqlV2`
-  query ExpensesPageQuery($collectiveSlug: String!, $limit: Int!, $offset: Int!, $type: ExpenseType, $tags: [String]) {
+const expensesPageQuery = gqlV2/* GraphQL */ `
+  query ExpensesPage($collectiveSlug: String!, $limit: Int!, $offset: Int!, $type: ExpenseType, $tags: [String]) {
     account(slug: $collectiveSlug) {
       id
       slug
@@ -286,7 +286,7 @@ const EXPENSES_PAGE_QUERY = gqlV2`
   }
 `;
 
-const getData = graphql(EXPENSES_PAGE_QUERY, {
+const addExpensesPageData = graphql(expensesPageQuery, {
   options: props => ({
     context: API_V2_CONTEXT,
     fetchPolicy: 'cache-and-network',
@@ -300,4 +300,4 @@ const getData = graphql(EXPENSES_PAGE_QUERY, {
   }),
 });
 
-export default injectIntl(getData(ExpensePage));
+export default injectIntl(addExpensesPageData(ExpensePage));

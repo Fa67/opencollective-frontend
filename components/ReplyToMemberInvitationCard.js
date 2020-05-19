@@ -55,8 +55,8 @@ const messages = defineMessages({
   },
 });
 
-const replyToInvitationMutation = gql`
-  mutation ReplyToInvitation($id: Int!, $accept: Boolean!) {
+const replyToMemberInvitationMutation = gql`
+  mutation ReplyToMemberInvitation($id: Int!, $accept: Boolean!) {
     replyToMemberInvitation(invitationId: $id, accept: $accept)
   }
 `;
@@ -68,7 +68,7 @@ const replyToInvitationMutation = gql`
 const ReplyToMemberInvitationCard = ({ invitation, isSelected, refetchLoggedInUser }) => {
   const { formatMessage } = useIntl();
   const [accepted, setAccepted] = React.useState();
-  const [sendReplyToInvitation, { loading, error, data }] = useMutation(replyToInvitationMutation);
+  const [sendReplyToInvitation, { loading, error, data }] = useMutation(replyToMemberInvitationMutation);
   const isDisabled = loading;
   const hasReplied = data && typeof data.replyToMemberInvitation !== 'undefined';
 

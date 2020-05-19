@@ -182,8 +182,8 @@ SingleCollectiveWithoutBankAccount.propTypes = {
   data: PropTypes.object,
 };
 
-const getHostsQuery = gql`
-  query allCollectives($slugs: [String]) {
+const pricingHostsQuery = gql`
+  query PricingHosts($slugs: [String]) {
     allCollectives(slugs: $slugs) {
       total
       collectives {
@@ -208,10 +208,10 @@ const getHostsQuery = gql`
   }
 `;
 
-const addHostsData = graphql(getHostsQuery, {
+const addPricingHostsData = graphql(pricingHostsQuery, {
   options: {
     variables: { slugs: featuredHostsSlugs },
   },
 });
 
-export default addHostsData(SingleCollectiveWithoutBankAccount);
+export default addPricingHostsData(SingleCollectiveWithoutBankAccount);

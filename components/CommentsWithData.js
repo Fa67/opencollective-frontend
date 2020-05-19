@@ -126,11 +126,11 @@ class CommentsWithData extends React.Component {
   }
 }
 
-const getCommentsQuery = gqlV2`
-  query getCommentsQuery($id: String!, $limit: Int, $offset: Int) {
+const commentsQuery = gqlV2/* GraphQL */ `
+  query Comments($id: String!, $limit: Int, $offset: Int) {
     expense(id: $id) {
       id
-      comments(limit: $limit, offset: $offset, orderBy: {direction: ASC}) {
+      comments(limit: $limit, offset: $offset, orderBy: { direction: ASC }) {
         totalCount
         nodes {
           id
@@ -169,7 +169,8 @@ const getCommentsQueryVariables = ({ expense, limit = COMMENTS_PER_PAGE }) => ({
 });
 
 const COMMENTS_PER_PAGE = 10;
-export const commentsQuery = graphql(getCommentsQuery, {
+
+export const addCommentsQuery = graphql(commentsQuery, {
   options: props => ({
     context: { apiVersion: '2' },
     variables: getCommentsQueryVariables(props),
@@ -198,8 +199,8 @@ export const commentsQuery = graphql(getCommentsQuery, {
   }),
 });
 
-const createCommentQuery = gqlV2`
-  mutation createComment($comment: CommentCreateInput!) {
+const createCommentMutation = gqlV2/* GraphQL */ `
+  mutation CreateComment($comment: CommentCreateInput!) {
     createComment(comment: $comment) {
       id
       html
@@ -228,7 +229,7 @@ const createCommentQuery = gqlV2`
   }
 `;
 
-const createCommentMutation = graphql(createCommentQuery, {
+const addCreateCommentMutation = graphql(createCommentMutation, {
   options: {
     context: { apiVersion: '2' },
   },
@@ -237,7 +238,7 @@ const createCommentMutation = graphql(createCommentQuery, {
       return await mutate({
         variables: { comment },
         update: (proxy, { data: { createComment } }) => {
-          const query = getCommentsQuery;
+          const query = commentsQuery;
           const variables = getCommentsQueryVariables(ownProps);
           /**
            * In other to fire a component re-render it is necessary to deep clone the
@@ -255,15 +256,15 @@ const createCommentMutation = graphql(createCommentQuery, {
   }),
 });
 
-const deleteCommentQuery = gqlV2`
-  mutation deleteComment($id: String!) {
+const deleteCommentMutation = gqlV2/* GraphQL */ `
+  mutation DeleteComment($id: String!) {
     deleteComment(id: $id) {
       id
     }
   }
 `;
 
-const deleteCommentMutation = graphql(deleteCommentQuery, {
+const addDeleteCommentMutation = graphql(deleteCommentMutation, {
   options: {
     context: { apiVersion: '2' },
   },
@@ -272,7 +273,7 @@ const deleteCommentMutation = graphql(deleteCommentQuery, {
       return await mutate({
         variables: { id },
         update: (proxy, { data: { deleteComment } }) => {
-          const query = getCommentsQuery;
+          const query = commentsQuery;
           const variables = getCommentsQueryVariables(ownProps);
           /**
            * In other to fire a component re-render it is necessary to deep clone the
@@ -290,8 +291,8 @@ const deleteCommentMutation = graphql(deleteCommentQuery, {
   }),
 });
 
-const editCommentQuery = gqlV2`
-  mutation editComment($comment: CommentUpdateInput!) {
+const editCommentMutation = gqlV2/* GraphQL */ `
+  mutation EditComment($comment: CommentUpdateInput!) {
     editComment(comment: $comment) {
       id
       html
@@ -320,7 +321,7 @@ const editCommentQuery = gqlV2`
   }
 `;
 
-const editCommentMutation = graphql(editCommentQuery, {
+const addEditCommentMutation = graphql(editCommentMutation, {
   options: {
     context: { apiVersion: '2' },
   },
@@ -331,9 +332,11 @@ const editCommentMutation = graphql(editCommentQuery, {
   }),
 });
 
-export default compose(
-  commentsQuery,
-  createCommentMutation,
-  editCommentMutation,
-  deleteCommentMutation,
-)(CommentsWithData);
+const addGraphql = compose(
+  addCommentsQuery,
+  addCreateCommentMutation,
+  addEditCommentMutation,
+  addDeleteCommentMutation,
+);
+
+export default addGraphql(CommentsWithData);

@@ -1,6 +1,6 @@
 import gql from 'graphql-tag';
 
-export const EditCollectiveSettingsMutation = gql`
+export const editCollectiveSettingsMutation = gql`
   mutation EditCollectiveSettings($id: Int!, $settings: JSON) {
     editCollective(collective: { id: $id, settings: $settings }) {
       id
@@ -10,8 +10,8 @@ export const EditCollectiveSettingsMutation = gql`
 `;
 
 /** A mutation used by child components to update the collective */
-export const EditCollectiveLongDescriptionMutation = gql`
-  mutation EditCollective($id: Int!, $longDescription: String) {
+export const editCollectiveLongDescriptionMutation = gql`
+  mutation EditCollectiveLongDescriptionMutation($id: Int!, $longDescription: String) {
     editCollective(collective: { id: $id, longDescription: $longDescription }) {
       id
       longDescription
@@ -19,8 +19,8 @@ export const EditCollectiveLongDescriptionMutation = gql`
   }
 `;
 
-export const EditAvatarMutation = gql`
-  mutation EditCollectiveImage($id: Int!, $image: String) {
+export const editCollectiveAvatarMutation = gql`
+  mutation EditCollectiveAvatar($id: Int!, $image: String) {
     editCollective(collective: { id: $id, image: $image }) {
       id
       image
@@ -29,8 +29,8 @@ export const EditAvatarMutation = gql`
   }
 `;
 
-export const EditCollectiveBackgroundMutation = gql`
-  mutation EditCollective($id: Int!, $settings: JSON, $backgroundImage: String) {
+export const editCollectiveBackgroundMutation = gql`
+  mutation EditCollectiveBackgroundMutation($id: Int!, $settings: JSON, $backgroundImage: String) {
     editCollective(collective: { id: $id, settings: $settings, backgroundImage: $backgroundImage }) {
       id
       settings

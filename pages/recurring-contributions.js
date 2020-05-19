@@ -20,7 +20,7 @@ import { H2, P } from '../components/Text';
 import { withUser } from '../components/UserProvider';
 
 const recurringContributionsPageQuery = gqlV2/* GraphQL */ `
-  query RecurringContributions($collectiveSlug: String) {
+  query RecurringContributionsPage($collectiveSlug: String) {
     account(slug: $collectiveSlug) {
       id
       slug
@@ -216,10 +216,8 @@ class recurringContributionsPage extends React.Component {
   }
 }
 
-const getData = graphql(recurringContributionsPageQuery, {
-  options: {
-    context: API_V2_CONTEXT,
-  },
+const addRecurringContributionsPageData = graphql(recurringContributionsPageQuery, {
+  options: { context: API_V2_CONTEXT },
 });
 
-export default injectIntl(withUser(getData(recurringContributionsPage)));
+export default injectIntl(withUser(addRecurringContributionsPageData(recurringContributionsPage)));

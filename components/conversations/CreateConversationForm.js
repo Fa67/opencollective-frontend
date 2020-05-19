@@ -19,7 +19,7 @@ import StyledInput from '../StyledInput';
 import StyledInputTags from '../StyledInputTags';
 import { H4, P } from '../Text';
 
-const CreateConversationMutation = gqlV2`
+const CreateConversationMutation = gqlV2/* GraphQL */ `
   mutation CreateConversation($title: String!, $html: String!, $CollectiveId: String!, $tags: [String]) {
     createConversation(title: $title, html: $html, CollectiveId: $CollectiveId, tags: $tags) {
       id
