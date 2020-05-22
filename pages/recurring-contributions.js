@@ -34,6 +34,7 @@ const recurringContributionsPageQuery = gqlV2/* GraphQL */ `
         totalCount
         nodes {
           id
+          legacyPaymentMethodId
           amount {
             value
             currency
@@ -92,13 +93,11 @@ class recurringContributionsPage extends React.Component {
 
   createNotification = (type, error) => {
     this.setState({ notification: true });
-    if (type === 'activate') {
-      this.setState({ notificationType: 'activate' });
-    } else if (type === 'cancel') {
-      this.setState({ notificationType: 'cancel' });
-    } else if (type === 'error') {
+    if (type === 'error') {
       this.setState({ notificationType: 'error' });
       this.setState({ notificationText: error });
+    } else {
+      this.setState({ notificationType: type });
     }
   };
 
@@ -142,14 +141,21 @@ class recurringContributionsPage extends React.Component {
                 {notificationType === 'activate' && (
                   <FormattedMessage
                     id="subscription.createSuccessActivate"
-                    defaultMessage="<strong>Recurring contribution activated!</strong> Woohoo! 🎉"
+                    defaultMessage="Recurring contribution <strong>activated</strong>! Woohoo! 🎉"
                     values={I18nFormatters}
                   />
                 )}
                 {notificationType === 'cancel' && (
                   <FormattedMessage
                     id="subscription.createSuccessCancel"
-                    defaultMessage="<strong>Your recurring contribution has been cancelled.</strong>"
+                    defaultMessage="Your recurring contribution has been <strong>cancelled</strong>."
+                    values={I18nFormatters}
+                  />
+                )}
+                {notificationType === 'update' && (
+                  <FormattedMessage
+                    id="subscription.createSuccessUpdated"
+                    defaultMessage="Your recurring contribution has been <strong>updated</strong>."
                     values={I18nFormatters}
                   />
                 )}
@@ -174,7 +180,7 @@ class recurringContributionsPage extends React.Component {
                   mx={2}
                   onClick={() => this.setState({ filter: 'active' })}
                 >
-                  <FormattedMessage id="Subscriptions.Active" defaultMessage="Active recurring contributions" />
+                  <FormattedMessage id="Subscriptions.Active" defaultMessage="Active" />
                 </FilterTag>
                 <FilterTag
                   type={this.state.filter === 'monthly' ? 'dark' : null}
@@ -183,7 +189,7 @@ class recurringContributionsPage extends React.Component {
                   mx={2}
                   onClick={() => this.setState({ filter: 'monthly' })}
                 >
-                  <FormattedMessage id="Subscriptions.Monthly" defaultMessage="Monthly recurring contributions" />
+                  <FormattedMessage id="Frequency.Monthly" defaultMessage="Monthly" />
                 </FilterTag>
                 <FilterTag
                   type={this.state.filter === 'yearly' ? 'dark' : null}
@@ -192,7 +198,7 @@ class recurringContributionsPage extends React.Component {
                   mx={2}
                   onClick={() => this.setState({ filter: 'yearly' })}
                 >
-                  <FormattedMessage id="Subscriptions.Yearly" defaultMessage="Yearly recurring contributions" />
+                  <FormattedMessage id="Frequency.Yearly" defaultMessage="Yearly" />
                 </FilterTag>
                 <FilterTag
                   type={this.state.filter === 'cancelled' ? 'dark' : null}
@@ -200,7 +206,7 @@ class recurringContributionsPage extends React.Component {
                   mx={2}
                   onClick={() => this.setState({ filter: 'cancelled' })}
                 >
-                  <FormattedMessage id="Subscriptions.Cancelled" defaultMessage="Cancelled recurring contributions" />
+                  <FormattedMessage id="Subscriptions.Cancelled" defaultMessage="Cancelled" />
                 </FilterTag>
               </Flex>
               <RecurringContributionsContainer

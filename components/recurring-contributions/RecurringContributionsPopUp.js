@@ -18,6 +18,8 @@ import StyledHr from '../StyledHr';
 import { P } from '../Text';
 import { withUser } from '../UserProvider';
 
+import UpdatePaymentMethodPopUp from './UpdatePaymentMethodPopUp';
+
 const messages = defineMessages({
   cancel: {
     id: 'actions.cancel',
@@ -186,7 +188,7 @@ const RecurringContributionsPopUp = ({ contribution, status, createNotification,
   const activateMenu = menuState === 'mainMenu' && status === 'CANCELLED';
 
   return (
-    <PopUpMenu minHeight={160} width={'100%'} overflowY={'auto'} ref={popupNode}>
+    <PopUpMenu minHeight={160} maxHeight={360} width={'100%'} overflowY={'auto'} ref={popupNode}>
       {mainMenu && (
         <MenuSection>
           <Flex flexGrow={1 / 4} width={1} alignItems="center" justifyContent="center">
@@ -374,27 +376,12 @@ const RecurringContributionsPopUp = ({ contribution, status, createNotification,
 
       {paymentMethodMenu && (
         <MenuSection>
-          <Flex flexGrow={1 / 4} width={1} alignItems="center" justifyContent="center">
-            <P my={2} fontSize="Caption" textTransform="uppercase" color="black.700">
-              {formatMessage(messages.updatePaymentMethod)}
-            </P>
-            <Flex flexGrow={1} alignItems="center">
-              <StyledHr width="100%" ml={2} />
-            </Flex>
-          </Flex>
-          <Flex flexGrow={1 / 4} width={1} alignItems="center">
-            <StyledButton
-              buttonSize="small"
-              onClick={() => {
-                setMenuState('mainMenu');
-              }}
-            >
-              {formatMessage(messages.cancel)}
-            </StyledButton>
-            <StyledButton buttonSize="small" buttonStyle="secondary">
-              {formatMessage(messages.update)}
-            </StyledButton>
-          </Flex>
+          <UpdatePaymentMethodPopUp
+            setMenuState={setMenuState}
+            contribution={contribution}
+            createNotification={createNotification}
+            setShowPopup={setShowPopup}
+          />
         </MenuSection>
       )}
 
