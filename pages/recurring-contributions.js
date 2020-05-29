@@ -78,7 +78,7 @@ class recurringContributionsPage extends React.Component {
 
   static propTypes = {
     collectiveSlug: PropTypes.string.isRequired,
-    LoggedInUser: PropTypes.object.isRequired,
+    LoggedInUser: PropTypes.object,
     data: PropTypes.shape({
       loading: PropTypes.bool,
       error: PropTypes.any,

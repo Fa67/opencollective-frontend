@@ -5,7 +5,7 @@ import { PlusCircle } from '@styled-icons/boxicons-regular/PlusCircle';
 import { MoneyCheck } from '@styled-icons/fa-solid/MoneyCheck';
 import themeGet from '@styled-system/theme-get';
 import gql from 'graphql-tag';
-import { first, get, uniqBy } from 'lodash';
+import { first, get, pick, uniqBy } from 'lodash';
 import { withRouter } from 'next/router';
 import { defineMessages, FormattedDate, FormattedMessage, useIntl } from 'react-intl';
 import styled from 'styled-components';
@@ -55,7 +55,7 @@ const messages = defineMessages({
 });
 
 const getPaymentMethodsQuery = gql`
-  query Collective($collectiveSlug: String) {
+  query UpdatePaymentMethodPopUpQuery($collectiveSlug: String) {
     Collective(slug: $collectiveSlug) {
       id
       type
@@ -95,8 +95,8 @@ const updatePaymentMethodMutation = gqlV2/* GraphQL */ `
 `;
 
 const addPaymentMethodMutation = gqlV2/* GraphQL */ `
-  mutation addPaymentMethod($newPaymentMethod: NewPaymentMethodInput!) {
-    addPaymentMethod(newPaymentMethod: $newPaymentMethod) {
+  mutation addPaymentMethod($newPaymentMethod: PaymentMethodCreateInput!) {
+    addStripeCreditCard(newPaymentMethod: $newPaymentMethod) {
       id
     }
   }
@@ -333,7 +333,8 @@ const UpdatePaymentMethodPopUp = ({
                   createNotification('error', error.message);
                   return false;
                 }
-                const newPaymentMethod = stripeTokenToPaymentMethod(token);
+                const newStripePaymentMethod = stripeTokenToPaymentMethod(token);
+                const newPaymentMethod = pick(newStripePaymentMethod, ['name', 'token', 'data']);
                 try {
                   await submitAddPaymentMethod({
                     variables: { newPaymentMethod },
@@ -376,8 +377,7 @@ const UpdatePaymentMethodPopUp = ({
                     variables: {
                       order: { id: contribution.id },
                       paymentMethod: {
-                        uuid: selectedPaymentMethod.value.paymentMethod.uuid,
-                        CollectiveId: selectedPaymentMethod.value.CollectiveId,
+                        legacyId: selectedPaymentMethod.value.paymentMethod.id,
                       },
                     },
                   });
@@ -399,7 +399,7 @@ const UpdatePaymentMethodPopUp = ({
 };
 
 UpdatePaymentMethodPopUp.propTypes = {
-  data: PropTypes.object.isRequired,
+  data: PropTypes.object,
   setMenuState: PropTypes.func,
   router: PropTypes.object.isRequired,
   contribution: PropTypes.object.isRequired,

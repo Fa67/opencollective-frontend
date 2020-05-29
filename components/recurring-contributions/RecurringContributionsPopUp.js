@@ -11,6 +11,7 @@ import styled from 'styled-components';
 
 import { getErrorFromGraphqlException } from '../../lib/errors';
 import { API_V2_CONTEXT, gqlV2 } from '../../lib/graphql/helpers';
+import { recurringContributionsPageQuery } from '../../lib/graphql/queries';
 
 import { Flex } from '../Grid';
 import StyledButton from '../StyledButton';
@@ -106,49 +107,6 @@ const activateRecurringContributionMutation = gqlV2/* GraphQL */ `
   mutation activateRecurringContribution($order: OrderReferenceInput!) {
     activateOrder(order: $order) {
       id
-    }
-  }
-`;
-
-const subsRevampPageQuery = gqlV2/* GraphQL */ `
-  query RecurringContributions($collectiveSlug: String) {
-    account(slug: $collectiveSlug) {
-      id
-      slug
-      name
-      type
-      description
-      settings
-      imageUrl
-      twitterHandle
-      orders {
-        totalCount
-        nodes {
-          id
-          amount {
-            value
-            currency
-          }
-          status
-          frequency
-          tier {
-            name
-          }
-          totalDonations {
-            value
-            currency
-          }
-          toAccount {
-            id
-            slug
-            name
-            description
-            tags
-            imageUrl
-            settings
-          }
-        }
-      }
     }
   }
 `;
@@ -286,7 +244,7 @@ const RecurringContributionsPopUp = ({ contribution, status, createNotification,
                     variables: { order: { id: contribution.id } },
                     refetchQueries: [
                       {
-                        query: subsRevampPageQuery,
+                        query: recurringContributionsPageQuery,
                         variables: { collectiveSlug: props.router.query.collectiveSlug },
                         context: API_V2_CONTEXT,
                       },
@@ -345,7 +303,7 @@ const RecurringContributionsPopUp = ({ contribution, status, createNotification,
                     variables: { order: { id: contribution.id } },
                     refetchQueries: [
                       {
-                        query: subsRevampPageQuery,
+                        query: recurringContributionsPageQuery,
                         variables: { collectiveSlug: props.router.query.collectiveSlug },
                         context: API_V2_CONTEXT,
                       },
